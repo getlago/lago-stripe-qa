@@ -1,0 +1,32 @@
+version: "3.8"
+
+volumes:
+  redis_data:
+  stripe_qa_api_data:
+
+services:
+  redis:
+    image: redis:6.2-alpine
+    container_name: lago_stripe_qa_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+  qa_api:
+    image: stripe_qa_api
+    container_name: stripe_qa_api
+    restart: unless-stopped
+    command: ruby /app/app.rb
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 4567:4567
+    depends_on:
+      - redis
+    tmpfs:
+      - /tmp
+    volumes:
+      - .:/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

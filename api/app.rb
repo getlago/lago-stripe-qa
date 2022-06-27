@@ -13,6 +13,15 @@ require 'json'
 
 Stripe.api_key = ENV['STRIPE_SECRET_KEY']
 
+set :bind, '0.0.0.0'
+
+get '/' do
+  {
+    status: 'all good',
+    redis: redis.info,
+  }.to_json
+end
+
 post '/customer' do
   json = JSON.parse(request.body.read, symbolize_names: true)
   logger.info json
@@ -58,7 +67,7 @@ post '/webhooks' do
   halt 200
 end
 
-get '/secret' do
+get '/secret/:id' do
   customer = retrieve_customer(params[:customer_id])
   intent = create_setup_intent(customer[:stripe_customer_id])
 
@@ -71,7 +80,7 @@ end
 private
 
 def redis
-  @redis ||= Redis.new
+  @redis ||= Redis.new(url: ENV['REDIS_URL'])
 end
 
 def store_customer(customer)
