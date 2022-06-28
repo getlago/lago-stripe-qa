@@ -4,7 +4,6 @@ require 'dotenv/load'
 
 require 'sinatra'
 require 'sinatra/reloader' if development?
-require 'sinatra/cors'
 
 require 'redis'
 
@@ -16,8 +15,18 @@ require 'json'
 Stripe.api_key = ENV['STRIPE_SECRET_KEY']
 
 set :bind, '0.0.0.0'
-set :allow_origin, '*'
-set :allow_methods, 'GET,HEAD,POST,OPTIONS'
+
+before do
+  content_type :json
+  headers 'Access-Control-Allow-Origin' => '*',
+          'Access-Control-Allow-Methods' => %w[OPTIONS GET POST]
+end
+
+set :protection, false
+
+options '/customer' do
+  200
+end
 
 get '/' do
   {
