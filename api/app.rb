@@ -37,7 +37,7 @@ post '/customer' do
   }
 
   lago_customer = lago_client.customers.create(customer)
-  customer['lago_id'] = lago_customer.lago_id
+  customer[:lago_id] = lago_customer.lago_id
 
   store_customer(customer)
 
