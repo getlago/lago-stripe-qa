@@ -4,6 +4,8 @@ require 'dotenv/load'
 
 require 'sinatra'
 require 'sinatra/reloader' if development?
+require 'sinatra/cors'
+
 require 'redis'
 
 require 'stripe'
@@ -14,6 +16,8 @@ require 'json'
 Stripe.api_key = ENV['STRIPE_SECRET_KEY']
 
 set :bind, '0.0.0.0'
+set :allow_origin, '*'
+set :allow_methods, 'GET,HEAD,POST,OPTIONS'
 
 get '/' do
   {
@@ -37,11 +41,7 @@ post '/customer' do
 
   store_customer(customer)
 
-  {
-    customer_id: customer[:customer_id],
-    lago_customer_id: customer[:lago_id],
-    stripe_customer_id: customer[:stripe_customer_id],
-  }.to_json
+  render_customer(customer)
 end
 
 get '/customer/:id' do
@@ -49,11 +49,7 @@ get '/customer/:id' do
 
   return halt 404 unless customer
 
-  {
-    customer_id: customer[:customer_id],
-    lago_customer_id: customer[:lago_id],
-    stripe_customer_id: customer[:stripe_customer_id],
-  }.to_json
+  render_customer(customer)
 end
 
 post '/webhooks' do
@@ -108,4 +104,12 @@ def update_stripe_customer_id(lago_customer)
   customer[:stripe_customer_id] = lago_customer['billing_configuration']['provider_customer_id']
 
   store_customer(customer)
+end
+
+def render_customer(customer)
+  {
+    customer_id: customer[:customer_id],
+    lago_customer_id: customer[:lago_id],
+    stripe_customer_id: customer[:stripe_customer_id],
+  }.to_json
 end
