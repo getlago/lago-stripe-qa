@@ -12,10 +12,13 @@ docker-compose up qa_api
 API url will be http://0.0.0.0:4567
 
 ## .env
+
+```bash
 STRIPE_SECRET_KEY=CHANGE_ME
 LAGO_API_KEY=CHANGE_ME
 LAGO_API_URL=CHANGE_ME
 REDIS_URL=redis://redis:6379
+```
 
 ## API end points
 
