@@ -1,27 +1,21 @@
-import { Elements, PaymentElement } from '@stripe/react-stripe-js'
+import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
-import { Button } from '@mui/material'
+import { useLocation, Location } from 'react-router-dom'
+
+import { StripeForm } from '~/components/StripeForm'
 
 export const STRIPE_ROUTE = '/stripe'
 
-const stripePromise = loadStripe('pk_test_oKhSR5nslBRnBZpjO6KuzZeX')
+const stripePromise = loadStripe(STRIPE_SECRET_KEY)
 
 const SetStripe = () => {
-  const options = {
-    // passing the client secret obtained in step 2
-    clientSecret: '{{CLIENT_SECRET}}',
-    // Fully customizable with appearance API.
-    appearance: {
-      /*...*/
-    },
-  }
+  const location = useLocation()
+  const { state } = location as Location & { state: { clientSecret?: string } }
+  const options = { clientSecret: state?.clientSecret }
 
   return (
     <Elements stripe={stripePromise} options={options}>
-      <form>
-        <PaymentElement />
-        <Button>Submit</Button>
-      </form>
+      <StripeForm />
     </Elements>
   )
 }

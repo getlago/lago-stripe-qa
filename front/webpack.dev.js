@@ -75,7 +75,6 @@ module.exports = (env) =>
       client: {
         overlay: true,
       },
-      allowedHosts: ['app.lago.dev'],
     },
     optimization: {
       runtimeChunk: true,

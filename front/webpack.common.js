@@ -3,8 +3,6 @@ const path = require('path')
 
 const webpack = require('webpack')
 
-const APP_ENV = process.env.APP_ENV ?? 'development'
-
 module.exports = () => {
   return {
     entry: path.resolve(__dirname, 'src/index.js'),
@@ -25,11 +23,8 @@ module.exports = () => {
         React: 'react',
       }),
       new webpack.DefinePlugin({
-        IS_PROD_ENV: APP_ENV === 'production',
-        IS_DEV_ENV: APP_ENV === 'development',
-        APP_ENV: JSON.stringify(APP_ENV),
+        STRIPE_SECRET_KEY: JSON.stringify(process.env.STRIPE_SECRET_KEY),
         API_URL: JSON.stringify(process.env.API_URL),
-        APP_VERSION: JSON.stringify(process.env.APP_VERSION), // TODO - not passed on the cloud
       }),
     ],
   }
