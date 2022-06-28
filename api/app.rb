@@ -19,7 +19,8 @@ set :bind, '0.0.0.0'
 before do
   content_type :json
   headers 'Access-Control-Allow-Origin' => '*',
-          'Access-Control-Allow-Methods' => %w[OPTIONS GET POST]
+          'Access-Control-Allow-Methods' => %w[OPTIONS GET POST],
+          'Access-Control-Allow-Headers' => 'Content-Type'
 end
 
 set :protection, false
