@@ -116,12 +116,13 @@ def render_customer(customer)
     customer_id: customer[:customer_id],
     lago_customer_id: customer[:lago_id],
     stripe_customer_id: customer[:stripe_customer_id],
+    stripe_error: customer[:stripe_error]
   }.to_json
 end
 
 def set_customer_error(stripe_error)
   customer = retrieve_customer(stripe_error['customer_id'] || stripe_error['lago_customer_id'])
-  customer[:stripe_create_error] = stripe_error['provider_error']
+  customer[:stripe_error] ||= stripe_error['provider_error']
 
   store_customer(customer)
 end
