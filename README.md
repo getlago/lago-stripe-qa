@@ -36,17 +36,17 @@ REDIS_URL=redis://redis:6379
   - retrieve stripe intent secret
   - response will be a json with client_secret. Use this value to retrieve the stripe setup intent
 
-  ## Front app
+## Front app
 
-  ```bash
-  yarn start
-  ```
+```bash
+yarn start
+```
 
-  ### .env
+### .env
 
-  ```bash
-  API_URL=TO_CHANGE
-  STRIPE_SECRET_KEY=TO_CHANGE
-  ```
+```bash
+API_URL=TO_CHANGE
+STRIPE_SECRET_KEY=TO_CHANGE
+```
 
-  App will be running on http://192.168.1.17:8080/
+App will be running on http://192.168.1.17:8080/
