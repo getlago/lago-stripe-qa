@@ -56,8 +56,13 @@ post '/webhooks' do
   response = JSON.parse(request.body.read)
   logger.info response
 
-  if response['webhook_type'] == 'customer.payment_provider_created'
+  case response['webhook_type']
+  when 'customer.payment_provider_created'
     update_stripe_customer_id(response['customer'])
+  when 'customer.payment_provider_error'
+    set_customer_error(response['payment_provider_customer_error'])
+  when 'invoice.payment_failure'
+    set_customer_error(response['payment_provider_invoice_payment_error'])
   end
 
   halt 200
@@ -112,4 +117,11 @@ def render_customer(customer)
     lago_customer_id: customer[:lago_id],
     stripe_customer_id: customer[:stripe_customer_id],
   }.to_json
+end
+
+def set_customer_error(stripe_error)
+  customer = retrieve_customer(stripe_error['customer_id'] || stripe_error['lago_customer_id'])
+  customer[:stripe_create_error] = stripe_error['provider_error']
+
+  store_customer(customer)
 end
