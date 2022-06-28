@@ -16,6 +16,10 @@ Stripe.api_key = ENV['STRIPE_SECRET_KEY']
 
 set :bind, '0.0.0.0'
 
+######################
+# CORS
+######################
+
 before do
   content_type :json
   headers 'Access-Control-Allow-Origin' => '*',
@@ -28,6 +32,18 @@ set :protection, false
 options '/customer' do
   200
 end
+
+options '/customer/:id' do
+  200
+end
+
+options '/secret/:id' do
+  200
+end
+
+######################
+# Routes
+######################
 
 get '/' do
   {
@@ -51,6 +67,7 @@ post '/customer' do
 
   store_customer(customer)
 
+  logger.info customer
   render_customer(customer)
 end
 
@@ -59,6 +76,7 @@ get '/customer/:id' do
 
   return halt 404 unless customer
 
+  logger.info customer
   render_customer(customer)
 end
 
@@ -78,15 +96,20 @@ post '/webhooks' do
   halt 200
 end
 
-get '/secret/:id' do
+get '/secret/:customer_id' do
   customer = retrieve_customer(params[:customer_id])
   intent = create_setup_intent(customer[:stripe_customer_id])
 
   customer[:intent_secret] = intent.client_secret
   store_customer(customer)
 
+  logger.info intent.client_secret
   { client_secret: intent.client_secret }.to_json
 end
+
+######################
+# Private methods
+######################
 
 private
 
