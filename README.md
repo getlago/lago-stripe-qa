@@ -31,6 +31,15 @@ REDIS_URL=redis://redis:6379
   - response will be a json with customer_id, lago_id, stripe_customer_id
   - should be called until stripe_customer_id is present
 - get /secret/:id
+
   - id = customer_id
   - retrieve stripe intent secret
   - response will be a json with client_secret. Use this value to retrieve the stripe setup intent
+
+  ## Front app
+
+  ```bash
+  yarn start
+  ```
+
+  App will be running on http://192.168.1.17:8080/
