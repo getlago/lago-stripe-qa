@@ -85,5 +85,8 @@
   },
   "alias": {
     "@mui/styled-engine": "@mui/styled-engine-sc"
+  },
+  "overrides": {
+    "cosmiconfig": "8.1.3"
   }
 }
