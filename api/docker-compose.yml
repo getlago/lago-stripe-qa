@@ -1,5 +1,3 @@
-version: "3.8"
-
 volumes:
   redis_data:
   stripe_qa_api_data:
